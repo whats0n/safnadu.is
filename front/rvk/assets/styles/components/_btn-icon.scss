@@ -1,0 +1,45 @@
+.btn-icon {
+  display: inline-flex;
+  vertical-align: top;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  transition: color $themeTransitionDuration, background-color $themeTransitionDuration;
+
+  @include mq-tablet_lg {
+    width: 40px;
+    height: 40px;
+  }
+
+  @each $theme in $themes {
+    $themeName: nth($theme, 1);
+    $themeStyles: nth($theme, 2);
+    $themeColorPrimary: map-get($themeStyles, 'primary');
+
+    .is-#{$themeName}-theme & {
+      color: $white;
+      background-color: $themeColorPrimary;
+    }
+  }
+
+  &__figure {
+    font-size: 36px;
+
+    @include mq-tablet_lg {
+      font-size: 18px;
+    }
+
+    &[class*="angle-left"] {
+      transform: translateX(-2px);
+    }
+
+    &[class*="angle-right"] {
+      transform: translateX(2px);
+    }
+  }
+
+  &__text {
+    display: none;
+  }
+}

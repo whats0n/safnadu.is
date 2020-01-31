@@ -1,0 +1,56 @@
+$themes: (
+  'supernova' (
+    primary: #1809BA,
+    secondary: #FFC700
+  ),
+  'lovender-rose' (
+    primary: #411F7C,
+    secondary: #FBAFF0
+  ),
+  'midnight-blue' (
+    primary: #00C978,
+    secondary: #411F7C
+  ),
+  'dark-orange' (
+    primary: #1809BA,
+    secondary: #FF9400
+  ),
+  'bondi-blue' (
+    primary: #FFC700,
+    secondary: #0087BE
+  ),
+  'ghost-white' (
+    primary: #1809BA,
+    secondary: #EBEBFF
+  ),
+  'dark-turquoise' (
+    primary: #CD0603,
+    secondary: #00C2D6
+  ),
+  'melon' (
+    primary: #411F7C,
+    secondary: #FFB6A3
+  ),
+  'guardsman-red' (
+    primary: #FFB6A3,
+    secondary: #CD0603
+  )
+);
+
+$themeTransitionDuration: 0.25s;
+
+.layout {
+  transition: color $themeTransitionDuration, background-color $themeTransitionDuration;
+
+  @each $theme in $themes {
+    $themeName: nth($theme, 1);
+    $themeStyles: nth($theme, 2);
+    $themeColor: map-get($themeStyles, 'primary');
+    $themeBackground: map-get($themeStyles, 'secondary');
+
+    &.is-#{$themeName}-theme {
+      color: $themeColor;
+      background-color: $themeBackground;
+    }
+  }
+}

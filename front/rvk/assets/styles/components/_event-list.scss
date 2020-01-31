@@ -1,0 +1,100 @@
+.event-list {
+  min-height: 100vh;
+
+  &__container {
+    padding-top: 13px;
+  }
+
+  &__inner {
+    padding-left: 95px;
+
+    @include mq-tablet_lg {
+      padding-left: 60px;
+    }
+  
+    @include mq-phone_lg {
+      padding-left: 50px;
+    }
+  }
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -26px;
+
+    @include mq-tablet_lg {
+      margin: -13px;
+    }
+  }
+
+  &__item {
+    display: flex;
+    padding: 26px;
+    width: 33.33%;
+
+    @include mq-tablet_lg {
+      padding: 13px;
+      width: 50%;
+    }
+
+    @include mq-phone_md {
+      width: 100%;
+    }
+
+    &-link {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      background: $light;
+      transition: opacity $themeTransitionDuration, visibility $themeTransitionDuration, transform $themeTransitionDuration;
+
+      &.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.8);
+      }
+    }
+
+    &-img {
+      position: relative;
+      flex: 0 0 auto;
+      padding-bottom: (203/309) * 100%;
+      @include cover;
+      transition: background-color $themeTransitionDuration;
+
+      @each $theme in $themes {
+        $themeName: nth($theme, 1);
+        $themeStyles: nth($theme, 2);
+        $themeColorPrimary: map-get($themeStyles, 'primary');
+    
+        .is-#{$themeName}-theme & {
+          background-color: $themeColorPrimary;
+        }
+      }
+    }
+
+    &-date {
+      position: absolute;
+      top: 12px;
+      left: 11px;
+      padding: 7px 8px 6px;
+      background: $light;
+    }
+
+    &-content {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      padding: 4px 18px 13px;
+    }
+
+    &-title {
+      flex: 1 1 auto;
+      word-break: break-word;
+    }
+
+    &-text {
+      flex: 0 0 auto;
+    }
+  }
+}

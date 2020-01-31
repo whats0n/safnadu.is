@@ -1,0 +1,57 @@
+.title-xl {
+  font-size: pxToRem(132);
+  font-weight: 700;
+  font-style: italic;
+  line-height: (158/132);
+  letter-spacing: pxToRem(-0.39);
+
+  @include mq-tablet_lg {
+    font-size: pxToRem(132*0.7);
+  }
+
+  @include mq-phone_md {
+    font-size: pxToRem(132*0.4);
+  }
+}
+
+.tag {
+  font-size: pxToRem(20);
+  line-height: (24/20);
+}
+
+.date {
+  font-size: pxToRem(28);
+  letter-spacing: pxToRem(-0.09);
+}
+
+//card's text
+.title-md {
+  font-size: pxToRem(30);
+  font-weight: 700;
+  font-style: italic;
+  line-height: (36/30);
+  letter-spacing: pxToRem(-0.09);
+}
+
+.small {
+  font-size: pxToRem(14);
+  line-height: (17/14);
+  letter-spacing: pxToRem(-0.04);
+}
+
+.meta-data {
+  font-size: pxToRem(18);
+  letter-spacing: pxToRem(-0.05);
+}
+
+.text {
+  font-size: pxToRem(16);
+  line-height: (22/16);
+  letter-spacing: pxToRem(-0.05);
+}
+
+// filters
+.label {
+  font-size: pxToRem(25);
+  line-height: (30/25);
+}

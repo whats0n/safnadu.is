@@ -1,0 +1,26 @@
+@mixin add-font ($family, $weight, $style, $file-name) {
+    @font-face {
+        font-family: $family;
+        src: url(../fonts/#{$file-name}.woff2) format("woff2"), url(../fonts/#{$file-name}.woff) format("woff");
+        font-weight: $weight;
+        font-style: $style;
+    }
+}
+
+$basic-sans: 'BasicSans';
+$font__primary: 'BasicSans', Helvetica, sans-serif;
+
+$fonts: 
+  $basic-sans 700 normal 'BasicSans-Bold',
+  $basic-sans 700 italic 'BasicSans-BoldItalic',
+  $basic-sans 400 normal 'BasicSans-Regular',
+  $basic-sans 400 italic 'BasicSans-RegularItalic',;
+
+@each $font in $fonts {
+  $family: nth($font, 1);
+  $weight: nth($font, 2);
+  $style: nth($font, 3);
+  $file-name: nth($font, 4);
+  
+  @include add-font ($family, $weight, $style, $file-name);
+}

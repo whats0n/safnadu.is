@@ -1,0 +1,141 @@
+.event-details {
+  &__inner {
+    padding: 27px 0 27px 95px;
+
+    @include mq-tablet_lg {
+      padding-left: 60px;
+    }
+  
+    @include mq-phone_lg {
+      padding-left: 50px;
+    }
+  }
+
+  &__box {
+    position: relative;
+    padding-top: 56px;
+
+    @include mq-tablet_lg {
+      padding-top: 0;
+    }
+  }
+
+  &__box-in {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding-bottom: 36px;
+    background: $light;
+  }
+
+  &__main {
+    margin-top: -56px;
+    width: (716/1011) * 100%;
+
+    @include mq-tablet_lg {
+      margin-top: 0;
+      width: 100%;
+    }
+
+    &-content {
+      padding-left: 39px;
+
+      @include mq-tablet_lg {
+        padding: 0 24px;
+      }
+    }
+  }
+
+  &__aside {
+    padding: 39px 10px 0 30px;
+    width: ((1011 - 716)/1011) * 100%;
+
+    @include mq-tablet_lg {
+      padding: 32px 24px 0;
+      width: 100%;
+    }
+  }
+
+  &__controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: ((1011 - 716)/1011) * 100%;
+
+    @include mq-tablet_lg {
+      padding: 24px 21px;
+      width: auto;
+    }
+
+    &-item {
+      padding: 0 3px;
+    }
+  }
+
+  &__img {
+    // padding-bottom: (438/711) * 100%;
+    display: block;
+    width: 100%;
+    // @include cover;
+
+    &:not(:last-child) {
+      margin-bottom: 36px;
+    }
+  }
+
+  &__title {
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+  }
+
+  &__label {
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+  }
+
+  &__info {
+    &:not(:last-child) {
+      margin-bottom: 33px;
+    }
+
+    &-item {
+      &:not(:last-child) {
+        margin-bottom: 1.375em;
+      }
+    }
+  }
+
+  &__media {
+    &-link {
+      position: relative;
+      display: block;
+      padding-left: ((24 + 8) / 30) * 1em;
+      font-size: pxToRem(30);
+      font-weight: 700;
+      font-style: italic;
+      line-height: (46/30);
+      letter-spacing: pxToRem(-0.09);
+    }
+
+    &-figure {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: (24/30) * 1em;
+      height: (46/30) * 1em;
+    }
+
+    &-icon {
+      font-size: pxToRem(23);
+      line-height: 1;
+    }
+  }
+}

@@ -1,0 +1,77 @@
+.welcome {
+  visibility: hidden;
+  padding: 6px 0 40px;
+  min-height: 100vh;
+
+  &:not(.is-animated) {
+    pointer-events: none;
+  }
+
+  &.is-visible {
+    visibility: visible;
+  }
+
+  &__title {
+    margin-bottom: 108px;
+
+    @include mq-tablet_lg {
+      margin-bottom: 108px * 0.7;
+    }
+  }
+
+  &__words {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin: -8px 0;
+
+    &-item {
+      padding: 8px 0;
+      margin-left: 95px;
+      font-size: pxToRem(44);
+      font-weight: 700;
+      line-height: (53/44);
+      cursor: pointer;
+
+      @include mq-tablet_lg {
+        margin-left: 0;
+        margin-right: 40px;
+        font-size: pxToRem((44 * 0.7));
+      }
+    }
+  }
+
+  &__logo {
+    position: fixed;
+    z-index: 50;
+    bottom: 39px;
+    height: 0;
+
+    &_left {
+      .welcome {
+        &__logo-in {
+          right: 0;
+        }
+      }
+    }
+
+    &_right {
+      .welcome {
+        &__logo-in {
+          left: 0;
+        }
+
+        &__logo-btn {
+          transform: scaleX(-1);
+        }
+      }
+    }
+
+    &-in {
+      position: absolute;
+      top: 50%;
+      margin-top: (-174px/2);
+    }
+  }
+}

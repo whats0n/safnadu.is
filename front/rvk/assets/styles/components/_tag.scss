@@ -1,0 +1,67 @@
+.tag {
+  position: relative;
+
+  &__btn {
+    position: relative;
+    padding: 5px 12px;
+    max-width: 100%;
+    color: $light;
+    font-size: pxToRem(20);
+    line-height: (24/20);
+    text-align: left;
+    cursor: pointer;
+    transition: color $themeTransitionDuration, background-color $themeTransitionDuration;
+  
+    .tag.is-selected & {
+      // padding-left: 24px;
+      padding-right: 36px;
+  
+      // &:before {
+      //   content: '';
+      //   position: absolute;
+      //   top: 16px;
+      //   left: 5px;
+      //   width: 10px;
+      //   height: 2px;
+      //   background: currentColor;
+      // }
+      // &:after {
+      //   content: '';
+      //   position: absolute;
+      //   top: 12px;
+      //   left: 9px;
+      //   width: 2px;
+      //   height: 10px;
+      //   background: currentColor;
+      // }
+    }
+  
+    @each $theme in $themes {
+      $themeName: nth($theme, 1);
+      $themeStyles: nth($theme, 2);
+      $themeColorPrimary: map-get($themeStyles, 'primary');
+  
+      .is-#{$themeName}-theme & {
+        background: $themeColorPrimary;
+      }
+    }
+  }
+
+  &__close {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    color: $light;
+    background: none;
+
+    .tag.is-selected & {
+      display: flex;
+    }
+  }
+}

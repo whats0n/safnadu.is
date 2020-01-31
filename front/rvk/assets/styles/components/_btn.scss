@@ -1,0 +1,20 @@
+.btn {
+  display: inline-block;
+  vertical-align: top;
+  padding: 4px 38px 6px;
+  color: $light;
+  font-size: pxToRem(25);
+  line-height: (30/25);
+  cursor: pointer;
+  transition: color $themeTransitionDuration, background-color $themeTransitionDuration;
+
+  @each $theme in $themes {
+    $themeName: nth($theme, 1);
+    $themeStyles: nth($theme, 2);
+    $themeColorPrimary: map-get($themeStyles, 'primary');
+
+    .is-#{$themeName}-theme & {
+      background: $themeColorPrimary;
+    }
+  }
+}

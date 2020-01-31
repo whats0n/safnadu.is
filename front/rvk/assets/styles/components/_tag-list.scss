@@ -1,0 +1,44 @@
+.tag-list {
+  position: relative;
+  
+  &__list {
+    margin: -5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  &__item {
+    flex: 0 0 auto;
+    margin: 5px;
+  }
+
+  &__datepicker {
+    position: absolute;
+    z-index: 20;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+
+    .vdp-datepicker {
+      &__calendar {
+        .cell {
+          &.selected {
+            @each $theme in $themes {
+              $themeName: nth($theme, 1);
+              $themeStyles: nth($theme, 2);
+              $themeColorPrimary: map-get($themeStyles, 'primary');
+              $themeColorSecondary: map-get($themeStyles, 'secondary');
+          
+              .is-#{$themeName}-theme & {
+                color: $themeColorSecondary;
+                background: $themeColorPrimary;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

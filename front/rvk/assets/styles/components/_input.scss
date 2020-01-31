@@ -1,0 +1,15 @@
+.input {
+  border-bottom: 1px solid currentColor;
+  width: 100%;
+  height: 37px;
+  color: inherit;
+  background: none;
+  font-size: pxToRem(20);
+  line-height: normal;
+  text-align: left;
+
+  &::placeholder {
+    color: inherit;
+    opacity: 0.2;
+  }
+}

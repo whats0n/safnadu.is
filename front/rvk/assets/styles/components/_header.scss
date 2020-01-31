@@ -1,0 +1,100 @@
+.header {
+  position: relative;
+  z-index: 100;
+  
+  &__inner {
+    &.is-fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      min-width: 320px;
+    }
+  }
+
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  &__title {
+    flex: 0 0 auto;
+  }
+
+  &__tabs {
+    display: flex;
+    flex: 0 0 auto;
+    padding-bottom: 22px;
+    margin: 0 -5px;
+
+    &-item {
+      padding: 5px;
+    }
+
+    &-btn {
+      padding: 0 10px;
+      color: inherit;
+      background: none;
+      font-size: pxToRem(42);
+      font-weight: 700;
+      font-style: italic;
+      line-height: (45/42);
+      letter-spacing: pxToRem(-0.13);
+
+      &.is-active {
+        @each $theme in $themes {
+          $themeName: nth($theme, 1);
+          $themeStyles: nth($theme, 2);
+          $themeColorPrimary: map-get($themeStyles, 'primary');
+          $themeColorSecondary: map-get($themeStyles, 'secondary');
+          transition: color $themeTransitionDuration, background-color $themeTransitionDuration;
+      
+          .is-#{$themeName}-theme & {
+            color: $themeColorSecondary;
+            background-color: $themeColorPrimary;
+          }
+        }
+      }
+    }
+  }
+
+  &__date {
+    position: absolute;
+    top: 100%;
+    left: 48px;
+    overflow: hidden;
+    transform: scale(-1);
+    min-height: calc(100vh - 190px);
+
+    @include mq-tablet_lg {
+      left: 24px;
+    }
+  
+    @include mq-phone_lg {
+      left: 16px;
+    }
+
+    &-in {
+      position: relative;
+      font-size: pxToRem(28);
+      font-weight: 700;
+      font-style: italic;
+      line-height: (35/28);
+      letter-spacing: pxToRem(-0.09);
+      writing-mode: vertical-rl;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-top: 16px;
+        margin-left: -4px;
+        border-left: 4px solid currentColor;
+        height: 100%;
+      }
+    }
+  }
+}

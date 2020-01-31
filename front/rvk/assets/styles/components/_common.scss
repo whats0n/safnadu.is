@@ -1,0 +1,62 @@
+body {
+  min-width: 320px;
+  
+  &.is-unscrollable {
+    // position: fixed;
+    // top: 0;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+    overflow: hidden;
+    // min-height: 100vh;
+
+    // #__nuxt,
+    // #__layout,
+    // .layout {
+    //   height: 100%;
+    // }
+  }
+}
+
+.layout {
+  min-height: 100vh;
+
+  &.is-visible {
+    .layout {
+      &__inner {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+
+  &__inner {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+  }
+}
+
+.container {
+  position: relative;
+  padding-left: 48px;
+  padding-right: 48px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1440px;
+
+  @include mq-tablet_lg {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  @include mq-phone_lg {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+.content {
+  max-width: 1130px;
+}
