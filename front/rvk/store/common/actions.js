@@ -1,15 +1,18 @@
 import {
   STATES,
-  // GETTERS,
+  GETTERS,
   MUTATIONS,
   ACTIONS,
   THEMES,
   DEFAULT_VIEW,
-  eventDates
+  eventDates,
+  eventTypes,
+  eventPlaces,
+  eventAccesses
 } from '~/helpers/constants'
 import getItems from '~/helpers/getItems'
 
-const request = ({ state, method, callback }) =>
+const request = ({ state, getters, method, callback }) =>
   new Promise(resolve => {
     const today = new Date()
     const tomorrow = new Date(new Date().setDate(today.getDate() + 1))
@@ -25,10 +28,12 @@ const request = ({ state, method, callback }) =>
 
     const limit = state[STATES.EVENTS_LIMIT]
     const offset = state[STATES.EVENTS_OFFSET]
-    // const place = getters[GETTERS.EVENT_PLACES].find(item => item.isSelected)
-    //   .value
-    // const type = getters[GETTERS.EVENT_TYPES].find(item => item.isSelected)
-    //   .value
+    const place = getters[GETTERS.EVENT_PLACES].find(item => item.isSelected)
+      .value
+    const type = getters[GETTERS.EVENT_TYPES].find(item => item.isSelected)
+      .value
+    const access = getters[GETTERS.EVENT_ACCESSES].find(item => item.isSelected)
+      .value
 
     getItems(
       {
@@ -37,15 +42,33 @@ const request = ({ state, method, callback }) =>
         offset,
         search,
         date,
-        time
-        // type: type !== getters[GETTERS.EVENT_TYPES][0].value ? type : null
+        time,
+        type: type !== getters[GETTERS.EVENT_TYPES][0].value ? type : null,
+        place: place !== getters[GETTERS.EVENT_PLACES][0].value ? place : null,
+        access:
+          access !== getters[GETTERS.EVENT_ACCESSES][0].value ? access : null
       },
       data => {
         resolve()
         const isActiveTime = time === state[STATES.SELECTED_TIME]
         const isActiveData = selected === state[STATES.SELECTED_DATE]
         const isActiveSearch = search === state[STATES.SEARCH]
-        isActiveTime && isActiveData && isActiveSearch && callback(data)
+        const isActiveType =
+          type ===
+          getters[GETTERS.EVENT_TYPES].find(item => item.isSelected).value
+        const isActivePlace =
+          place ===
+          getters[GETTERS.EVENT_PLACES].find(item => item.isSelected).value
+        const isActiveAccess =
+          access ===
+          getters[GETTERS.EVENT_ACCESSES].find(item => item.isSelected).value
+        isActiveTime &&
+          isActiveData &&
+          isActiveSearch &&
+          isActiveType &&
+          isActivePlace &&
+          isActiveAccess &&
+          callback(data)
       }
     )
   })
@@ -55,6 +78,15 @@ export default {
     const currentIndex = state[STATES.THEME]
     const lastIndex = THEMES.length - 1
     const index = currentIndex >= lastIndex ? 0 : currentIndex + 1
+
+    commit(MUTATIONS.SET_DATA, {
+      field: STATES.THEME,
+      data: index
+    })
+  },
+
+  [ACTIONS.SET_RANDOM_THEME]: ({ commit }) => {
+    const index = Math.floor(Math.random() * Math.floor(THEMES.length - 1))
 
     commit(MUTATIONS.SET_DATA, {
       field: STATES.THEME,
@@ -116,20 +148,62 @@ export default {
       data: value
     }),
 
+  [ACTIONS.RESET_FILTERS]: ({ commit }) => {
+    commit(MUTATIONS.SET_DATA, {
+      field: STATES.SELECTED_TIME,
+      data: null
+    })
+    commit(MUTATIONS.SET_DATA, {
+      field: STATES.SELECTED_DATE,
+      data: null
+    })
+    commit(MUTATIONS.SET_DATA, {
+      field: STATES.SELECTED_ACCESS,
+      data: eventAccesses[0].value
+    })
+    commit(MUTATIONS.SET_DATA, {
+      field: STATES.SELECTED_TYPE,
+      data: eventTypes[0].value
+    })
+    commit(MUTATIONS.SET_DATA, {
+      field: STATES.SELECTED_PLACE,
+      data: eventPlaces[0].value
+    })
+    commit(MUTATIONS.SET_DATA, {
+      field: STATES.SEARCH,
+      data: ''
+    })
+  },
+
   [ACTIONS.REQUEST_EVENT_DETAILS]: ({ commit, state }, id) =>
-    new Promise(resolve => {
+    new Promise((resolve, reject) => {
+      const event = state[STATES.EVENTS].find(item => item._id === id)
+      commit(MUTATIONS.SET_DATA, {
+        field: STATES.EVENT_DETAILS,
+        data: event
+      })
       getItems(
         {
           id
         },
         data => {
-          resolve()
+          resolve(data)
           commit(MUTATIONS.SET_DATA, {
-            field: STATES.EVENTS,
-            data: [...state[STATES.EVENTS], ...data]
+            field: STATES.EVENT_DETAILS,
+            data
           })
-        }
+        },
+        error => reject(error)
       )
+    }),
+
+  [ACTIONS.CLEAR_EVENT_DETAILS]: ({ commit, state }, id) =>
+    new Promise(resolve => {
+      resolve()
+      commit(MUTATIONS.SET_DATA, {
+        field: STATES.EVENT_DETAILS,
+        data: null
+      })
     }),
 
   [ACTIONS.CLEAR_EVENTS]: ({ commit }) =>
@@ -138,19 +212,20 @@ export default {
       data: []
     }),
 
-  [ACTIONS.REQUEST_COUNT]: ({ commit, state }) =>
-    request({
-      state,
-      method: 'count',
-      callback: data => {
-        commit(MUTATIONS.SET_DATA, {
-          field: STATES.COUNT,
-          data: data.count
-        })
-      }
-    }),
+  // [ACTIONS.REQUEST_COUNT]: ({ commit, state, getters }) =>
+  //   request({
+  //     state,
+  //     getters,
+  //     method: 'count',
+  //     callback: data => {
+  //       commit(MUTATIONS.SET_DATA, {
+  //         field: STATES.COUNT,
+  //         data: data.count
+  //       })
+  //     }
+  //   }),
 
-  [ACTIONS.REQUEST_EVENTS]: ({ commit, state }, props) =>
+  [ACTIONS.REQUEST_EVENTS]: ({ commit, state, getters }, props) =>
     (() => {
       commit(MUTATIONS.SET_DATA, {
         field: STATES.LOADING,
@@ -168,28 +243,40 @@ export default {
           field: STATES.EVENTS_OFFSET,
           data: 0
         })
-        request({
-          state,
-          method: 'count',
-          callback: data => {
-            commit(MUTATIONS.SET_DATA, {
-              field: STATES.COUNT,
-              data: data.count
-            })
-            callback()
-          }
-        })
+        // request({
+        //   state,
+        //   getters,
+        //   method: 'count',
+        //   callback: data => {
+        //     commit(MUTATIONS.SET_DATA, {
+        //       field: STATES.COUNT,
+        //       data: data.count
+        //     })
+        //     callback()
+        //   }
+        // })
+        callback()
       } else {
-        state[STATES.EVENTS].length !== state[STATES.COUNT] && callback()
+        state[STATES.EVENTS].length !== state[STATES.COUNT]
+          ? callback()
+          : commit(MUTATIONS.SET_DATA, {
+              field: STATES.LOADING,
+              data: false
+            })
       }
     })(() =>
       request({
         state,
+        getters,
         callback: data => {
           const items = state[STATES.EVENTS]
           commit(MUTATIONS.SET_DATA, {
             field: STATES.EVENTS,
-            data: [...items, ...data]
+            data: [...items, ...data.items]
+          })
+          commit(MUTATIONS.SET_DATA, {
+            field: STATES.COUNT,
+            data: +data.total
           })
           commit(MUTATIONS.SET_DATA, {
             field: STATES.LOADING,
@@ -197,7 +284,7 @@ export default {
           })
           commit(MUTATIONS.SET_DATA, {
             field: STATES.EVENTS_OFFSET,
-            data: items.length + data.length
+            data: items.length + data.items.length
           })
         }
       })

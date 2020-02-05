@@ -64,14 +64,35 @@
     align-items: flex-start;
     justify-content: center;
     width: ((1011 - 716)/1011) * 100%;
+    transition: opacity 0.3s, visibility 0.3s;
+
+    &.fade-enter-active, &.fade-leave-active {
+      transition: opacity .5s;
+    }
+
+    &.fade-enter, &.fade-leave-to {
+      opacity: 0;
+    }
 
     @include mq-tablet_lg {
       padding: 24px 21px;
       width: auto;
     }
 
+    @include mq-phone_md {
+      position: relative;
+      top: auto;
+      right: auto;
+      justify-content: flex-end;
+      padding: 0 0 16px;
+    }
+
     &-item {
       padding: 0 3px;
+
+      @include mq-phone_md {
+        padding: 0 0 0 6px;
+      }
     }
   }
 
@@ -92,7 +113,7 @@
     }
   }
 
-  &__label {
+  &__label {    
     &:not(:last-child) {
       margin-bottom: 8px;
     }
@@ -103,11 +124,19 @@
       margin-bottom: 33px;
     }
 
+    &-label {
+      font-weight: 600;
+    }
+
     &-item {
       &:not(:last-child) {
         margin-bottom: 1.375em;
       }
     }
+  }
+
+  &__text {
+    white-space: pre-line;
   }
 
   &__media {

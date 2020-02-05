@@ -3,7 +3,7 @@
     <Header
       ref="header"
       :is-visible="isVisible"
-      :date="fullDate"
+      :date="pageData.fullDate"
       type="static"
     />
     <div v-if="hasPageData" class="container event-details__container">
@@ -21,20 +21,34 @@
                   rel="noopener noreferrer"
                 />
               </li>
-              <li v-if="hasPrevEventLink" class="event-details__controls-item">
+              <li class="event-details__controls-item">
                 <ButtonIcon
+                  v-if="hasPrevEventLink"
                   tag="NuxtLink"
                   :to="pageData.prevEventLink"
                   name="angle-left"
                   text="Go to previous event"
                 />
-              </li>
-              <li v-if="hasNextEventLink" class="event-details__controls-item">
                 <ButtonIcon
+                  v-else
+                  type="button"
+                  name="angle-left"
+                  text="Go to previous event"
+                />
+              </li>
+              <li class="event-details__controls-item">
+                <ButtonIcon
+                  v-if="hasNextEventLink"
                   tag="NuxtLink"
                   :to="pageData.nextEventLink"
                   name="angle-right"
                   text="Go to next event"
+                />
+                <ButtonIcon
+                  v-else
+                  type="button"
+                  name="angle-right"
+                  text="Go to previous event"
                 />
               </li>
               <li class="event-details__controls-item">
@@ -69,12 +83,22 @@
                     <div class="event-details__info-label">Tímasetning</div>
                     <div class="event-details__info-value">
                       {{ pageData.date }}
+                      <template v-if="hasRange">
+                        <br />á opnunartíma
+                      </template>
                     </div>
                   </li>
                   <li class="event-details__info-item">
                     <div class="event-details__info-label">Staðsetning</div>
                     <div class="event-details__info-value">
-                      {{ pageData.place }}
+                      <a
+                        :href="pageData.mapLink"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="event-details__info-link"
+                      >
+                        {{ pageData.place }}
+                      </a>
                     </div>
                   </li>
                   <li class="event-details__info-item">
@@ -107,8 +131,36 @@
                       </div>
                     </a>
                   </li>
+                  <li class="event-details__media-item">
+                    <a
+                      href="#"
+                      class="event-details__media-link"
+                      @click.prevent="fbShare"
+                    >
+                      <div class="event-details__media-figure">
+                        <Icon
+                          name="facebook"
+                          class="event-details__media-icon"
+                        />
+                      </div>
+                      <div class="event-details__media-text">
+                        Facebook
+                      </div>
+                    </a>
+                  </li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="container event-details__container">
+      <div class="content">
+        <div class="event-details__inner">
+          <div class="event-details__box">
+            <div class="title-md">
+              Hleð...
             </div>
           </div>
         </div>
@@ -136,33 +188,44 @@ export default {
       default: false
     }
   },
+  data: () => ({
+    isLoaded: false
+  }),
   computed: {
     ...mapGetters({
-      getPageData: `${MODULES.COMMON}/${GETTERS.GET_EVENT_DETAILS}`
+      pageData: `${MODULES.COMMON}/${GETTERS.EVENT_DETAILS}`
     }),
-    pageData() {
-      const { id } = this.$route.query
-      return this.getPageData(id) || {}
-    },
     eventListLink() {
       return eventListLink
     },
+    hasControls() {
+      return this.hasPageData && this.hasPrevEventLink && this.hasNextEventLink
+    },
     hasPageData() {
-      return !!Object.keys(this.pageData).length
+      return isExist(this.pageData) && !!Object.keys(this.pageData).length
+    },
+    hasRange() {
+      return this.hasPageData && this.pageData.hasRange
     },
     hasMedia() {
-      return Array.isArray(this.pageData.media) && this.pageData.media.length
+      return (
+        this.hasPageData &&
+        Array.isArray(this.pageData.media) &&
+        this.pageData.media.length
+      )
     },
     hasMapLink() {
-      return !!this.pageData.mapLink
+      return this.hasPageData && !!this.pageData.mapLink
     },
     hasPrevEventLink() {
-      return !!this.pageData.prevEventLink
+      return this.hasPageData && !!this.pageData.prevEventLink
     },
     hasNextEventLink() {
-      return !!this.pageData.nextEventLink
+      return this.hasPageData && !!this.pageData.nextEventLink
     },
     fullDate() {
+      if (!this.hasPageData) return null
+
       const date = this.pageData.startDate
       if (isExist(date)) {
         const d = new Date(date)
@@ -175,14 +238,39 @@ export default {
       }
     }
   },
-  created() {
-    !Object.keys(this.pageData).length &&
-      this.requestEvent(this.$route.query.id)
+  watch: {
+    '$route.query.id': {
+      immediate: true,
+      handler(id) {
+        this.isLoaded = false
+        if (isExist(id) && id.length) {
+          this.clearEvent()
+          this.requestEvent(this.$route.query.id)
+            .then(data => {
+              this.isLoaded = true
+              if (isExist(data)) return
+              this.$router.push('/')
+            })
+            .catch(() => this.$router.push('/'))
+        } else {
+          this.$router.push('/')
+        }
+      }
+    }
   },
   methods: {
     ...mapActions({
-      requestEvent: `${MODULES.COMMON}/${ACTIONS.REQUEST_EVENT_DETAILS}`
-    })
+      requestEvent: `${MODULES.COMMON}/${ACTIONS.REQUEST_EVENT_DETAILS}`,
+      clearEvent: `${MODULES.COMMON}/${ACTIONS.CLEAR_EVENT_DETAILS}`
+    }),
+    fbShare() {
+      const url = window.location.href
+      const shareUrl =
+        'https://www.facebook.com/sharer/sharer.php?u=' + encodeURI(url)
+      const popupParams =
+        'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'
+      window.open(shareUrl, '', popupParams)
+    }
   }
 }
 </script>

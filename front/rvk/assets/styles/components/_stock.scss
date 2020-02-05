@@ -1,0 +1,72 @@
+.stock {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+
+  &__container,
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+  }
+
+  &__content {
+    flex: 1 1 auto;
+  }
+
+  &__inner {
+    padding: 50px 50px 39px;
+
+    @include mq-tablet_lg {
+      padding: 50px 0 39px;
+    }
+  }
+
+  &__text {
+    font-size: pxToRem(30);
+    line-height: (41/30);
+    letter-spacing: pxToRem(-0.09);
+
+    // font-size: 40px;
+
+    // @include mq-tablet_lg {
+    //   font-size: 32px;
+    // }
+
+    // @include mq-phone_lg {
+    //   font-size: 24px;
+    // }
+  }
+
+  &__links {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-size: 30px;
+  }
+
+  &__logo-wrapper {
+    flex: 0 0 auto;
+    font-size: 0;
+  }
+
+  &__logo {
+    color: inherit;
+    background: none;
+    font-size: 0;
+    
+    &-in {
+      font-size: 90px;
+
+      @include mq-tablet_lg {
+        font-size: 80px;
+      }
+      @include mq-phone_lg {
+        font-size: 56px;
+      }
+    }
+  }
+
+  &__items {
+    padding-bottom: 50px;
+  }
+}

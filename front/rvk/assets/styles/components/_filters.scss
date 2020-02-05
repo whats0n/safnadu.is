@@ -1,6 +1,6 @@
 .filters {
   position: fixed;
-  z-index: 100;
+  z-index: 102;
   top: 0;
   left: 100%;
   bottom: 0;
@@ -15,8 +15,12 @@
     .filters {
       &__wrapper {
         transform: translate(60%, 5%) rotate(-20deg);
+        @include mq-phone_md {
+          transform: translate(100%, 5%) rotate(0deg);
+        }
       }
     }
+
   }
 
   &.is-opened {
@@ -30,7 +34,7 @@
       }
 
       &__close {
-        transform: rotate(0) translate(10px, 10px)
+        transform: rotate(0) translate(10px, 10px);
       }
 
       &__overlay,
@@ -66,6 +70,24 @@
     line-height: (42/36);
     transform: rotate(20deg);
     transition: transform 0.5s;
+
+    @include mq-phone_md {
+      transform: rotate(0) translateX(-100%);
+      background-color: #EAEAFF;
+      width: 66px;
+      height: 66px;
+      // color: transparent;
+      font-size: 0;
+    }
+  }
+
+  &__icon-search {
+    display: none;
+
+    @include mq-phone_md {
+      display: block;
+      margin: auto;
+    }
   }
 
   &__wrapper {

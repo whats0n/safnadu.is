@@ -6,6 +6,7 @@ export const ACTIONS = {
   CHANGE_THEME: 'CHANGE_THEME',
   CHANGE_VIEW: 'CHANGE_VIEW',
 
+  SET_RANDOM_THEME: 'SET_RANDOM_THEME',
   SET_EVENT_LIST_SCROLL_POSITION: 'SET_EVENT_LIST_SCROLL_POSITION',
   SET_SELECTED_TYPE: 'SET_SELECTED_TYPE',
   SET_SELECTED_PLACE: 'SET_SELECTED_PLACE',
@@ -13,6 +14,9 @@ export const ACTIONS = {
   SET_SELECTED_DATE: 'SET_SELECTED_DATE',
   SET_SELECTED_TIME: 'SET_SELECTED_TIME',
   SET_SEARCH: 'SET_SEARCH',
+
+  CLEAR_EVENT_DETAILS: 'CLEAR_EVENT_DETAILS',
+  RESET_FILTERS: 'RESET_FILTERS',
 
   REQUEST_COUNT: 'REQUEST_COUNT',
   REQUEST_EVENTS: 'REQUEST_EVENTS',
@@ -32,6 +36,7 @@ export const GETTERS = {
 
   WELCOME_WORDS: 'WELCOME_WORDS',
 
+  EVENT_DETAILS: 'EVENT_DETAILS',
   EVENT_TYPES: 'EVENT_TYPES',
   EVENT_PLACES: 'EVENT_PLACES',
   EVENT_ACCESSES: 'EVENT_ACCESSES',
@@ -48,6 +53,7 @@ export const STATES = {
 
   COUNT: 'COUNT',
 
+  EVENT_DETAILS: 'EVENT_DETAILS',
   EVENTS: 'EVENTS',
   EVENTS_LIMIT: 'EVENTS_LIMIT',
   EVENTS_OFFSET: 'EVENTS_OFFSET',
@@ -65,7 +71,7 @@ export const MUTATIONS = {
   SET_DATA: 'SET_DATA'
 }
 
-export const DEFAULT_THEME = 0
+// export const DEFAULT_THEME = 0
 export const THEMES = [
   'supernova',
   'lovender-rose',
@@ -79,56 +85,67 @@ export const THEMES = [
 ]
 
 export const DEFAULT_VIEW = 0
-export const VIEWS = [{ id: 1, text: 'söfnin' }, { id: 2, text: '#safnaðu' }]
+export const VIEWS = [
+  {
+    id: 1,
+    text: 'söfnin',
+    isLink: true,
+    href: '/sofnin'
+  },
+  {
+    id: 2,
+    text: '#safnaðu',
+    isLink: true,
+    href: '/safnadu'
+  }
+]
 export const UNSCROLLABLE = 'is-unscrollable'
 
 export const eventListLink = '/'
 
 export const eventTypes = [
-  { id: 0, value: 'Allt', text: 'Allt' },
-  { id: 1, value: 'sýningar', text: 'sýningar' },
-  { id: 2, value: 'sjónlistir', text: 'sjónlistir' },
-  { id: 3, value: 'tónlist', text: 'tónlist' },
-  { id: 4, value: 'allsskonar', text: 'allsskonar' },
-  { id: 5, value: 'börn', text: 'börn' },
-  { id: 6, value: 'sviðslistir', text: 'sviðslistir' },
-  { id: 7, value: 'hátíðir', text: 'hátíðir' },
-  { id: 8, value: 'bókmenntir', text: 'bókmenntir' },
-  { id: 9, value: 'rólegt', text: 'rólegt' },
-  { id: 10, value: 'fjörugt', text: 'fjörugt' },
-  { id: 11, value: 'fræðsla', text: 'fræðsla' },
-  { id: 12, value: 'handavinna', text: 'handavinna' },
-  { id: 13, value: 'inni', text: 'inni' },
-  { id: 14, value: 'úti', text: 'úti' },
-  { id: 15, value: 'fjölskyldan', text: 'fjölskyldan' },
-  { id: 16, value: 'ljósmyndir', text: 'ljósmyndir' },
-  { id: 17, value: 'gagnvirkt', text: 'gagnvirkt' },
-  { id: 18, value: 'myndlist', text: 'myndlist' }
+  { id: 0, text: 'allt', value: 'allt' },
+  { id: 1, text: 'sýningar', value: 'sýning' },
+  { id: 2, text: 'sjónlistir', value: 'sýning' },
+  { id: 3, text: 'tónlist', value: 'tónlist' },
+  { id: 5, text: 'börn', value: 'börn' },
+  { id: 7, text: 'hátíðir', value: 'hátíð' },
+  { id: 8, text: 'bókmenntir', value: 'bók' },
+  { id: 15, text: 'fjölskyldan', value: 'fjölskyld' },
+  { id: 16, text: 'ljósmyndir', value: 'ljósmynd' },
+  { id: 17, text: 'gagnvirkt', value: 'landnáms' },
+  { id: 18, text: 'myndlist', value: 'sýning' }
 ]
 
 export const eventPlaces = [
   {
-    id: 0,
-    value: 'Ljósmyndasafn Reykjavíkur',
-    text: 'Ljósmyndasafn Reykjavíkur'
+    id: 'all',
+    text: 'allir staðir',
+    value: 'allir staðir'
   },
-  { id: 1, value: 'Landnámssýningin', text: 'Landnámssýningin' },
-  { id: 2, value: 'Sjóminjasafnið', text: 'Sjóminjasafnið' },
-  { id: 3, value: 'Árbæjarsafn', text: 'Árbæjarsafn' },
-  { id: 4, value: 'Hafnarhús', text: 'Hafnarhús' },
-  { id: 5, value: 'Kjarvalsstaðir', text: 'Kjarvalsstaðir' },
-  { id: 6, value: 'Ásmundarsafn', text: 'Ásmundarsafn' },
-  { id: 7, value: 'Grófinni', text: 'Borgarbókasafn Grófinni' },
-  { id: 8, value: 'Sólheimum', text: 'Borgarbókasafn Sólheimum' },
-  { id: 9, value: 'Árbæ', text: 'Borgarbókasafn Árbæ' },
-  { id: 10, value: 'Gerðubergi', text: 'Borgarbókasafn Gerðubergi' },
-  { id: 11, value: 'Kringlunni', text: 'Borgarbókasafn Kringlunni' }
+  {
+    id: 0,
+    value: 'ljósmyndasafn',
+    text: 'Ljósmyndasafn Reykjavíkur'
+  },
+  { id: 1, value: 'landnámssýningin', text: 'Landnámssýningin' },
+  { id: 2, value: 'sjóminjasafnið', text: 'Sjóminjasafnið' },
+  { id: 3, value: 'árbæjarsafn', text: 'Árbæjarsafn' },
+  { id: 4, value: 'hafnarhús', text: 'Hafnarhús' },
+  { id: 5, value: 'kjarvalsstaðir', text: 'Kjarvalsstaðir' },
+  { id: 6, value: 'ásmundarsafn', text: 'Ásmundarsafn' },
+  { id: 7, value: 'grófinni', text: 'Borgarbókasafnið Grófinni' },
+  { id: 8, value: 'sólheimum', text: 'Borgarbókasafnið Sólheimum' },
+  { id: 9, value: 'árbæ', text: 'Borgarbókasafnið Árbæ' },
+  { id: 10, value: 'gerðubergi', text: 'Borgarbókasafnið Gerðubergi' },
+  { id: 11, value: 'kringlu', text: 'Borgarbókasafnið Kringlunni' },
+  { id: 12, value: 'spönginni', text: 'Borgarbókasafnið Spönginni' }
 ]
 
 export const eventAccesses = [
   { id: 0, value: 'Allt', text: 'Allt' },
-  { id: 1, value: 'keyptur aðgangur', text: 'keyptur aðgangur' },
-  { id: 2, value: 'ókeypis aðgangur', text: 'ókeypis aðgangur' }
+  { id: 1, value: true, text: 'keyptur aðgangur' },
+  { id: 2, value: false, text: 'ókeypis aðgangur' }
 ]
 
 export const eventDates = [
@@ -142,3 +159,7 @@ export const eventTimes = [
   { id: 2, value: '12:00-18:00', text: 'Eftirmiðdagur' },
   { id: 3, value: '18:00-23:59', text: 'Kvöld' }
 ]
+
+export const museumsLink = '/sofnin'
+
+export const cookieName = 'RVK_SESSION'

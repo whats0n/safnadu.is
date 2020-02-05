@@ -1,0 +1,12 @@
+.link-inner {
+  border-bottom: 4px dotted currentColor;
+  font-size: 20px;
+
+  &_inherit {
+    font-size: 100%;
+  }
+
+  &_lg {
+    font-size: 30px;
+  }
+}

@@ -1,0 +1,45 @@
+.museum-card {
+  &__img {
+    position: relative;
+    flex: 0 0 auto;
+    padding-bottom: (203/309) * 100%;
+    @include cover;
+    transition: background-color $themeTransitionDuration;
+
+    @each $theme in $themes {
+      $themeName: nth($theme, 1);
+      $themeStyles: nth($theme, 2);
+      $themeColorPrimary: map-get($themeStyles, 'primary');
+
+      .is-#{$themeName}-theme & {
+        background-color: $themeColorPrimary;
+      }
+    }
+  }
+
+  &__title {
+    font-size: pxToRem(36);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.2;
+    letter-spacing: -0.00562rem;
+    word-break: break-word;
+  }
+
+  &__text {
+    font-size: pxToRem(22);
+    line-height: 1.21429;
+    letter-spacing: -0.0025rem;
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px -10px;
+
+    &-item {
+      flex: 0 0 auto;
+      padding: 10px;
+    }
+  }
+}

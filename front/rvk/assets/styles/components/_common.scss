@@ -37,6 +37,14 @@ body {
   }
 }
 
+.main {
+  &_stock {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+}
+
 .container {
   position: relative;
   padding-left: 48px;

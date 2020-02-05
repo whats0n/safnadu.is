@@ -2,6 +2,7 @@
   <div
     v-scroll="handleScroll"
     :style="!isVisible && !loaded && { visibility: 'hidden' }"
+    class="with-scroll"
   >
     <slot :isVisible="isVisible"></slot>
   </div>
