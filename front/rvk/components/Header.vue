@@ -15,10 +15,32 @@
       }"
     >
       <div class="container header__container">
-        <div class="title-xl header__title">Safnaðu</div>
+        <span class="title-xl header__title" @click="closePopupOrScrollTop">
+          Safnaðu
+        </span>
         <ul class="header__tabs">
+          <!-- <li class="header__tabs-item">
+            <a
+              href="https://jolavaettir.safnadu.is/"
+              target="_blank"
+              class="header__tabs-btn"
+              :class="{
+                'is-active': false
+              }"
+            >
+              jólavættir
+            </a>
+          </li> -->
           <li v-for="item in tabs" :key="item.target" class="header__tabs-item">
+            <NuxtLink
+              v-if="item.isLink"
+              :to="item.href"
+              class="header__tabs-btn"
+            >
+              {{ item.text }}
+            </NuxtLink>
             <button
+              v-else
               class="header__tabs-btn"
               :class="{
                 'is-active': item.isActive
@@ -32,6 +54,14 @@
         <div v-if="hasDate" class="header__date">
           <div class="header__date-in">{{ date }}</div>
         </div>
+        <button
+          v-if="hasLogo"
+          type="button"
+          class="header__logo"
+          @click.prevent="handleChangeTheme"
+        >
+          <Icon name="rvk-logo" class="header__logo-in" />
+        </button>
       </div>
     </div>
   </header>
@@ -42,8 +72,13 @@ import { mapGetters, mapActions } from 'vuex'
 import { MODULES, GETTERS, ACTIONS } from '~/helpers/constants'
 import processClient from '~/helpers/processClient'
 
+import Icon from '~/components/Icon'
+
 export default {
   name: 'Header',
+  components: {
+    Icon
+  },
   props: {
     type: {
       type: String,
@@ -53,6 +88,10 @@ export default {
     date: {
       type: String,
       default: ''
+    },
+    hasLogo: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({
@@ -61,7 +100,8 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      tabs: `${MODULES.COMMON}/${GETTERS.VIEWS}`
+      tabs: `${MODULES.COMMON}/${GETTERS.VIEWS}`,
+      words: `${MODULES.COMMON}/${GETTERS.EVENT_TYPES}`
     }),
     classes() {
       return this.type && `header_${this.type}`
@@ -88,7 +128,10 @@ export default {
   },
   methods: {
     ...mapActions({
-      changeView: `${MODULES.COMMON}/${ACTIONS.CHANGE_VIEW}`
+      handleChangeTheme: `${MODULES.COMMON}/${ACTIONS.CHANGE_THEME}`,
+      changeView: `${MODULES.COMMON}/${ACTIONS.CHANGE_VIEW}`,
+      resetFilters: `${MODULES.COMMON}/${ACTIONS.RESET_FILTERS}`,
+      requestItems: `${MODULES.COMMON}/${ACTIONS.REQUEST_EVENTS}`
     }),
     handleScroll() {
       const { inner, main } = this.$refs
@@ -106,6 +149,21 @@ export default {
       this.$emit('scroll', {
         height: inner.offsetHeight
       })
+    },
+    closePopupOrScrollTop() {
+      if (this.$route.path === '/') {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        })
+        // this.handleTypeChange(this.words[0])
+        this.resetFilters()
+        setTimeout(() => {
+          this.requestItems({ clear: true })
+        }, 1000)
+      } else {
+        this.$router.push('/')
+      }
     }
   }
 }

@@ -1,0 +1,162 @@
+.museum-list {
+  padding-bottom: 100px;
+
+  &__head {
+    &-text {
+      font-size: pxToRem(30);
+      line-height: (41/30);
+      letter-spacing: pxToRem(-0.09);
+    }
+  }
+  
+  &__intro {
+    padding-left: 95px;
+    margin-top: 120px;
+    max-width: 1130px;
+
+    @include mq-tablet_lg {
+      padding-left: 0;
+    }
+
+    @include mq-phone_lg {
+      margin-top: 120px * 0.6;
+    }
+  }
+
+  &__title {
+    font-size: pxToRem(72);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.19697;
+    letter-spacing: -0.02438rem;
+
+    @include mq-phone_lg {
+      font-size: pxToRem(72 * 0.6);
+    }
+  }
+
+  &__text {
+    font-size: pxToRem(28);
+    line-height: (35/28);
+
+    @include mq-phone_lg {
+      font-size: pxToRem(28 * 0.6);
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px -10px;
+
+    &-item {
+      flex: 0 0 auto;
+      padding: 10px;
+    }
+  }
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 13px;
+    padding-left: 95px;
+    margin: -26px;
+    max-width: (1130px + 26px * 2);
+
+    @include mq-tablet_lg {
+      padding-left: 60px;
+      margin: -13px;
+    }
+
+    @include mq-phone_lg {
+      padding-left: 50px;
+    }
+  }
+
+  &__item {
+    padding: 26px;
+    width: 33.33%;
+
+    @include mq-tablet_lg {
+      padding: 13px;
+      width: 50%;
+    }
+
+    @include mq-phone_md {
+      width: 100%;
+    }
+  }
+
+  &__footer {
+    margin: 100px auto 0;
+    // max-width: 1100px;
+    // background-color: $white;
+
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+
+      @include mq-phone_lg {
+        flex-direction: column;
+      }
+    }
+
+    &-item {
+      flex: 0 0 auto;
+      padding: 30px 45px;
+      max-width: 100%;
+
+      @include mq-desktop_sm {
+        padding: 25px;
+      }
+
+      @include mq-tablet_lg {
+        padding: 20px;
+      }
+    }
+
+    &-link {
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    &-icon {
+      $dk: 0.8;
+      $k: 0.8;
+
+      &_borgarbokasafnid {
+        font-size: 90px * $dk;
+
+        @include mq-tablet_lg {
+          font-size: 90px * $dk * $k;
+        }
+      }
+
+      &_borgarsogusafn {
+        font-size: 42px * $dk;
+
+        @include mq-tablet_lg {
+          font-size: 42px * $dk * $k;
+        }
+      }
+
+      &_listasafn {
+        font-size: 135px * $dk;
+
+        @include mq-tablet_lg {
+          font-size: 135px * $dk * $k;
+        }
+      }
+
+      &_menningarkort {
+        font-size: 78px * $dk;
+
+        @include mq-tablet_lg {
+          font-size: 78px * $dk * $k;
+        }
+      }
+    }
+  }
+}

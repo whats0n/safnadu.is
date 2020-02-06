@@ -11,19 +11,38 @@
     <div class="container event-list__container">
       <div class="content">
         <div class="event-list__inner">
-          <div class="event-list__items">
+          <a
+            href="https://safnanott.safnadu.is/"
+            target="_blank"
+            class="event-list__intro"
+          >
+            <img
+              src="~/static/img/safnanott.jpg"
+              alt=""
+              class="event-list__intro-img"
+            />
+          </a>
+          <div
+            v-if="isLoading && !disableLoader"
+            class="title-md event-list__loader"
+          >
+            Hleð...
+          </div>
+          <div v-else-if="hasItems" class="event-list__items">
             <div
-              v-for="item in items"
+              v-for="(item, i) in items"
               ref="card"
-              :key="item.id"
+              :key="item.id + '_' + i || Math.random()"
               :data-id="item.id"
               class="event-list__item"
             >
               <NuxtLink
+                v-if="!(item && item.blank)"
                 :to="item.page"
                 class="event-list__item-link"
                 :class="{
-                  'is-hidden': hidden[item.id]
+                  'is-hidden': hidden[item.id],
+                  'is-extended': item.bannerAd
                 }"
               >
                 <div
@@ -32,7 +51,7 @@
                     'background-image': `url(${item.img})`
                   }"
                 >
-                  <div class="event-list__item-date small">
+                  <div v-if="!!item.date" class="event-list__item-date small">
                     <strong>{{ item.date }}</strong>
                   </div>
                 </div>
@@ -47,9 +66,52 @@
                     {{ item.title }}
                   </div>
                   <div class="event-list__item-text small">{{ item.text }}</div>
+                  <div class="event-list__item-time small">
+                    <strong>{{ item.time }}</strong>
+                  </div>
                 </div>
               </NuxtLink>
+
+              <a
+                v-else
+                :href="item.page"
+                target="_blank"
+                class="event-list__item-link"
+                :class="{
+                  'is-hidden': hidden[item.id],
+                  'is-extended': item.bannerAd
+                }"
+              >
+                <div
+                  class="event-list__item-img"
+                  :style="{
+                    'background-image': `url(${item.img})`
+                  }"
+                >
+                  <!-- <div v-if="!!item.date" class="event-list__item-date small">
+                    <strong>{{ item.date }}</strong>
+                  </div> -->
+                </div>
+                <!-- <div class="event-list__item-content">
+                  <Dot
+                    v-if="isClient && isDot"
+                    class="event-list__item-title title-md"
+                    :msg="item.title"
+                    :line="2"
+                  ></Dot>
+                  <div v-else class="event-list__item-title title-md">
+                    {{ item.title }}
+                  </div>
+                  <div class="event-list__item-text small">{{ item.text }}</div>
+                  <div class="event-list__item-time small">
+                    <strong>{{ item.time }}</strong>
+                  </div>
+                </div> -->
+              </a>
             </div>
+          </div>
+          <div v-else class="title-md event-list__empty">
+            Fann ekkert. Prófaðu að breyta leitarskilyrðunum.
           </div>
         </div>
       </div>
@@ -66,6 +128,7 @@ import getScrollPosition from '~/helpers/getScrollPosition'
 import debounce from '~/helpers/debounce'
 import isExist from '~/helpers/isExist'
 import prettyDate from '~/helpers/prettyDate'
+import triggerScroll from '~/helpers/triggerScroll'
 
 import Header from '~/components/Header'
 import Filters from '~/components/Filters'
@@ -83,26 +146,54 @@ export default {
     hidden: {},
     isFiltersVisible: false,
     isDot: true,
-    date: null
+    date: null,
+    disableLoader: false
   }),
   computed: {
     ...mapGetters({
       items: `${MODULES.COMMON}/${GETTERS.EVENTS_TILES}`,
       isLoading: `${MODULES.COMMON}/${GETTERS.LOADING}`
     }),
+    hasItems() {
+      return !!this.items.length
+    },
     isClient() {
       return processClient(() => true)
     },
     fullDate() {
       const { date } = this
       if (isExist(date)) {
-        const d = new Date(date)
+        const isRange = Array.isArray(date)
+        const d = new Date(isRange ? date[0] : date)
         const month = prettyDate.months[d.getMonth()]
         const weekDay = prettyDate.days[d.getDay()]
         const day = d.getDate()
-        return `${weekDay} ${day}. ${month}`
+        const year = d.getFullYear()
+
+        if (isRange && date[0] !== date[1]) {
+          const dTo = new Date(date[1])
+          const dayTo = dTo.getDate()
+          const monthTo = prettyDate.months[dTo.getMonth()]
+          const yearTo = dTo.getFullYear()
+
+          return year !== yearTo
+            ? `${month} ${year} - ${monthTo} ${yearTo}`
+            : year === yearTo && month !== monthTo
+            ? `${month} - ${monthTo} ${year}`
+            : `${day} - ${dayTo}. ${month} ${year}`
+        } else {
+          return `${weekDay} ${day}. ${month} ${year}`
+        }
       } else {
         return date
+      }
+    }
+  },
+  watch: {
+    isLoading(isLoading) {
+      if (!isLoading) {
+        this.disableLoader = false
+        this.$nextTick(() => triggerScroll())
       }
     }
   },
@@ -125,18 +216,19 @@ export default {
       const { card } = this.$refs
       let date = null
       Array.isArray(card) &&
-        card.forEach((item, i) => {
-          this.$set(
-            this.hidden,
-            item.dataset.id,
-            item.getBoundingClientRect().top < height / 2
-          )
-
-          if (!(item.getBoundingClientRect().top < height / 2) && !date) {
+        card.some((item, i) => {
+          const rect = item.getBoundingClientRect()
+          if (
+            !(rect.top + rect.height / 2 < height) &&
+            !date &&
+            !item.querySelector('.is-extended')
+          ) {
             date = item.dataset.id
             const card = this.items.find(card => card.id === item.dataset.id)
-            this.date = isExist(card) ? card.startDate : null
+            this.date = isExist(card) ? card.dateRange || card.startDate : null
+            return true
           }
+          return false
         })
     },
     handleInfiniteScroll() {
@@ -145,8 +237,8 @@ export default {
 
       if (y + (window.innerHeight + 10) < documentHeight || this.isLoading)
         return
+      this.disableLoader = true
       this.requestEvents()
-      console.log('final')
     },
     toggleInfiniteScroll(isActive) {
       processClient(() => {

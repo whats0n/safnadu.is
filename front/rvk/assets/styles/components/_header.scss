@@ -1,14 +1,70 @@
 .header {
   position: relative;
   z-index: 100;
-  
+  flex: 0 0 auto;
+
+  &__logo {
+    position: absolute;
+    top: calc(100vh - 126px);
+    left: -60px;
+    font-size: 0;
+    color: inherit;
+    background: none;
+
+    @include mq-desktop_md {
+      top: calc(100vh - 120px);
+      left: 38px;
+    }
+    @include mq-tablet_lg {
+      top: calc(100vh - 90px);
+      left: 12px;
+    }
+    @include mq-phone_lg {
+      left: 14px;
+    }
+    @include mq-phone_md {
+      top: calc(100vh - 76px);
+    }
+
+    &-in {
+      font-size: 90px;
+
+      @include mq-tablet_lg {
+        font-size: 80px;
+      }
+      @include mq-phone_lg {
+        font-size: 56px;
+      }
+    }
+  }
   &__inner {
+    position: relative;
+
     &.is-fixed {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       min-width: 320px;
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      @each $theme in $themes {
+        $themeName: nth($theme, 1);
+        $themeStyles: nth($theme, 2);
+        $themeColorSecondary: map-get($themeStyles, 'secondary');
+
+        .is-#{$themeName}-theme & {
+          background: linear-gradient(to bottom, $themeColorSecondary 0%, $themeColorSecondary 60%, rgba($themeColorSecondary, 0) 100%);
+        }
+      }
     }
   }
 
@@ -17,10 +73,19 @@
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
+
+    @include mq-phone_lg {
+      display: block;
+    }
   }
 
   &__title {
     flex: 0 0 auto;
+    cursor: pointer;
+
+    @include mq-phone_md {
+      margin-left: 0px;
+    }
   }
 
   &__tabs {
@@ -42,15 +107,21 @@
       font-style: italic;
       line-height: (45/42);
       letter-spacing: pxToRem(-0.13);
+      transition: background-color $themeTransitionDuration;
+
+      @include mq-phone_md {
+        font-size: 1.625rem;
+      }
 
       &.is-active {
+        transition: color $themeTransitionDuration, background-color $themeTransitionDuration;
+
         @each $theme in $themes {
           $themeName: nth($theme, 1);
           $themeStyles: nth($theme, 2);
           $themeColorPrimary: map-get($themeStyles, 'primary');
           $themeColorSecondary: map-get($themeStyles, 'secondary');
-          transition: color $themeTransitionDuration, background-color $themeTransitionDuration;
-      
+
           .is-#{$themeName}-theme & {
             color: $themeColorSecondary;
             background-color: $themeColorPrimary;
@@ -62,18 +133,31 @@
 
   &__date {
     position: absolute;
-    top: 100%;
+    top: 100vh;
     left: 48px;
     overflow: hidden;
-    transform: scale(-1);
-    min-height: calc(100vh - 190px);
+    min-width: calc(100vh - 190px);
+    padding-left: 30px;
+    transform: rotate(-90deg);
+    transform-origin: left top;
+
+    @include mq-desktop_md {
+      padding-left: 150px;
+    }
 
     @include mq-tablet_lg {
       left: 24px;
+      padding-left: 120px;
+      min-width: calc(100vh - 250px);
     }
-  
+
     @include mq-phone_lg {
       left: 16px;
+      padding-left: 100px;
+    }
+
+    @include mq-phone_md {
+      min-width: calc(100vh - 130px);
     }
 
     &-in {
@@ -83,7 +167,11 @@
       font-style: italic;
       line-height: (35/28);
       letter-spacing: pxToRem(-0.09);
-      writing-mode: vertical-rl;
+      // writing-mode: vertical-rl;
+
+      @media only screen and (max-height: 780px) {
+        font-size: 1.25rem;
+      }
 
       &:before {
         content: '';

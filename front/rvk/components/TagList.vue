@@ -61,6 +61,14 @@ export default {
     oldDate: null
   }),
   watch: {
+    items: {
+      immediate: true,
+      handler(items) {
+        if (items.some(({ isSelected }) => isSelected)) return
+        this.value = null
+        this.oldDate = null
+      }
+    },
     isOpened(isOpened) {
       processClient(() =>
         isOpened

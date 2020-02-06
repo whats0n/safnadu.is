@@ -4,12 +4,25 @@
     class="welcome"
     :class="{
       'is-visible': isVisible,
-      'is-animated': isAnimated
+      'is-animated': isAnimated,
+      'is-disabled': hasSession
     }"
   >
-    <div ref="logoLeft" class="welcome__logo welcome__logo_left">
+    <div
+      ref="logoLeft"
+      class="welcome__logo welcome__logo_left"
+      @click="handleHint"
+    >
       <div ref="logoLeftButton" class="welcome__logo-in">
         <ButtonLogo class="welcome__logo-btn" />
+        <img
+          src="/img/smelltu-til-skipta-um-lit.png"
+          alt="hint"
+          class="welcome__logo-hint"
+          :class="{
+            'is-active': hasActiveHint
+          }"
+        />
       </div>
     </div>
     <div ref="logoRight" class="welcome__logo welcome__logo_right">
@@ -17,11 +30,15 @@
         <ButtonLogo class="welcome__logo-btn" />
       </div>
     </div>
-    <div class="container welcome__container">
+    <div
+      v-show="!hasSession"
+      ref="container"
+      class="container welcome__container"
+    >
       <div ref="title" class="welcome__title title-xl">
         <div v-if="!isSecondTitleActive" class="welcome__title-in">
           Velkomin<br />
-          a safn safnanna
+          á safn safnanna
         </div>
         <div v-else class="welcome__title-in">Hvað viltu skoða?</div>
       </div>
@@ -36,6 +53,11 @@
           >
             {{ item.text }}
           </li>
+          <li ref="singleWord" class="welcome__words-item">
+            <NuxtLink :to="museumsLink">
+              söfnin
+            </NuxtLink>
+          </li>
         </ul>
       </div>
     </div>
@@ -46,12 +68,22 @@
 import { mapActions, mapGetters } from 'vuex'
 import { TimelineMax, Power1 } from 'gsap'
 
-import { MODULES, ACTIONS, GETTERS } from '~/helpers/constants'
+import {
+  MODULES,
+  ACTIONS,
+  GETTERS,
+  museumsLink,
+  cookieName
+} from '~/helpers/constants'
 import processClient from '~/helpers/processClient'
 import scrollTo from '~/helpers/scrollTo'
 import toggleScroll from '~/helpers/toggleScroll'
+import cookie from '~/helpers/cookie'
 
 import ButtonLogo from '~/components/ButtonLogo'
+
+const hasSession = !!cookie.get(cookieName) && +cookie.get(cookieName) > 0
+const sessionCounter = hasSession ? +cookie.get(cookieName) : 0
 
 const DURATION_K = 0.8
 
@@ -80,12 +112,19 @@ export default {
   },
   data: () => ({
     isAnimated: false,
-    isSecondTitleActive: false
+    isSecondTitleActive: false,
+    hasActiveHint: false
   }),
   computed: {
     ...mapGetters({
-      words: `${MODULES.COMMON}/${GETTERS.WELCOME_WORDS}`
-    })
+      words: `${MODULES.COMMON}/${GETTERS.EVENT_TYPES}`
+    }),
+    museumsLink() {
+      return museumsLink
+    },
+    hasSession() {
+      return hasSession
+    }
   },
   watch: {
     isAnimated: {
@@ -99,11 +138,20 @@ export default {
   methods: {
     ...mapActions({
       handleChangeTheme: `${MODULES.COMMON}/${ACTIONS.CHANGE_THEME}`,
-      handleTypeChange: `${MODULES.COMMON}/${ACTIONS.SET_SELECTED_TYPE}`
+      handleTypeChange: `${MODULES.COMMON}/${ACTIONS.SET_SELECTED_TYPE}`,
+      requestItems: `${MODULES.COMMON}/${ACTIONS.REQUEST_EVENTS}`
     }),
     handleWordsClick(item) {
       scrollTo({ section: 'event-list' })
+      if (item.isSelected) return
       this.handleTypeChange(item)
+      this.requestItems({ clear: true })
+    },
+    handleHint() {
+      if (this.hasActiveHint && this.isAnimated) {
+        this.hasActiveHint = false
+        cookie.set(cookieName, 6)
+      }
     },
     showLogo() {
       const {
@@ -234,9 +282,12 @@ export default {
           },
           LABEL_START_THIRD_PART
         )
+        .call(() => {
+          this.hasActiveHint = sessionCounter + 1 <= 5
+        })
     },
     showContent() {
-      const { title, words } = this.$refs
+      const { title, words, singleWord } = this.$refs
 
       return new TimelineMax()
         .fromTo(
@@ -276,7 +327,7 @@ export default {
           )
         )
         .staggerFromTo(
-          words,
+          [...words, singleWord],
           DURATION_WORDS,
           {
             opacity: 0
@@ -307,9 +358,31 @@ export default {
           opacity: 1
         }
       )
-        .add(this.showLogo())
-        .add(this.showContent(), `-=${DURATION_THIRD_PART}`)
-      return tl
+
+      tl.add(this.showLogo())
+
+      !this.hasSession && tl.add(this.showContent(), `-=${DURATION_THIRD_PART}`)
+
+      this.hasActiveHint &&
+        tl.call(() => {
+          setTimeout(() => {
+            this.hasActiveHint = false
+          }, 15000)
+        })
+
+      return cookie.get(cookieName)
+        ? tl
+            .call(() => {
+              cookie.set(cookieName, sessionCounter + 1, {
+                expires: 5400000
+              })
+            })
+            .progress(1)
+        : tl.call(() => {
+            cookie.set(cookieName, 1, {
+              expires: 5400000
+            })
+          })
     }
   }
 }

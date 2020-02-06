@@ -9,24 +9,25 @@ const months = [
   'ágúst',
   'september',
   'oktober',
-  'nóvember'
+  'nóvember',
+  'desember'
 ]
 
 const days = [
+  'Sunnudagur',
   'Mánudagur',
   'Þriðjudagur',
   'Miðvikudagur',
   'Fimmtudagur',
   'Föstudagur',
-  'Laugardagur',
-  'Sunnudagur'
+  'Laugardagur'
 ]
 
 const simple = date => {
   date = new Date(date)
   const hours = '' + date.getHours()
   const minutes = '' + date.getMinutes()
-  return `${hours}:${minutes.padEnd(2, 0)}`
+  return `${hours}:${minutes.padStart(2, 0)}`
 }
 
 const full = ({ start, end }) => {
@@ -36,9 +37,18 @@ const full = ({ start, end }) => {
   return `${day}. ${months[month]} ${simple(start)} - ${simple(end)}`
 }
 
+const fullDate = date => {
+  date = new Date(date)
+  const day = '' + date.getDate()
+  const month = '' + (date.getMonth() + 1)
+  const year = '' + date.getFullYear()
+  return `${day.padStart(2, 0)}.${month.padStart(2, 0)}.${year}`
+}
+
 export default {
   simple,
   full,
+  fullDate,
   months,
   days
 }

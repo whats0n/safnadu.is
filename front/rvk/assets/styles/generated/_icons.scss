@@ -33,26 +33,53 @@
   @if $filename == angle-right {
     $char: "\E002";
   }
-  @if $filename == close {
+  @if $filename == borgarbokasafn {
     $char: "\E003";
   }
-  @if $filename == facebook {
+  @if $filename == borgarbokasafnid-v2 {
     $char: "\E004";
   }
-  @if $filename == link {
+  @if $filename == borgarbokasafnid-v3 {
     $char: "\E005";
   }
-  @if $filename == marker {
+  @if $filename == borgarbokasafnid {
     $char: "\E006";
   }
-  @if $filename == share {
+  @if $filename == borgarsogusafn {
     $char: "\E007";
   }
-  @if $filename == website {
+  @if $filename == close {
     $char: "\E008";
   }
-  @if $filename == youtube {
+  @if $filename == facebook {
     $char: "\E009";
+  }
+  @if $filename == instagram {
+    $char: "\E00A";
+  }
+  @if $filename == link {
+    $char: "\E00B";
+  }
+  @if $filename == listasafn {
+    $char: "\E00C";
+  }
+  @if $filename == marker {
+    $char: "\E00D";
+  }
+  @if $filename == menningarkort {
+    $char: "\E00E";
+  }
+  @if $filename == rvk-logo {
+    $char: "\E00F";
+  }
+  @if $filename == share {
+    $char: "\E010";
+  }
+  @if $filename == website {
+    $char: "\E011";
+  }
+  @if $filename == youtube {
+    $char: "\E012";
   }
 
   @return $char;
@@ -72,17 +99,44 @@
 .icon-angle-right {
   @include icon(angle-right);
 }
+.icon-borgarbokasafn {
+  @include icon(borgarbokasafn);
+}
+.icon-borgarbokasafnid-v2 {
+  @include icon(borgarbokasafnid-v2);
+}
+.icon-borgarbokasafnid-v3 {
+  @include icon(borgarbokasafnid-v3);
+}
+.icon-borgarbokasafnid {
+  @include icon(borgarbokasafnid);
+}
+.icon-borgarsogusafn {
+  @include icon(borgarsogusafn);
+}
 .icon-close {
   @include icon(close);
 }
 .icon-facebook {
   @include icon(facebook);
 }
+.icon-instagram {
+  @include icon(instagram);
+}
 .icon-link {
   @include icon(link);
 }
+.icon-listasafn {
+  @include icon(listasafn);
+}
 .icon-marker {
   @include icon(marker);
+}
+.icon-menningarkort {
+  @include icon(menningarkort);
+}
+.icon-rvk-logo {
+  @include icon(rvk-logo);
 }
 .icon-share {
   @include icon(share);

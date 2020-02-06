@@ -5,15 +5,35 @@
     padding-top: 13px;
   }
 
+  &__banner {
+    display: block;
+    padding: 26px;
+    width: 100%;;
+    img {
+      width: 100%;
+    }
+  }
+
   &__inner {
     padding-left: 95px;
 
     @include mq-tablet_lg {
       padding-left: 60px;
     }
-  
+
     @include mq-phone_lg {
       padding-left: 50px;
+    }
+  }
+
+  &__intro {
+    display: block;
+    margin-bottom: 30px;
+    font-size: 0;
+
+    &-img {
+      display: block;
+      width: 100%;
     }
   }
 
@@ -47,11 +67,25 @@
       flex-direction: column;
       background: $light;
       transition: opacity $themeTransitionDuration, visibility $themeTransitionDuration, transform $themeTransitionDuration;
+      position: relative;
 
       &.is-hidden {
         opacity: 0;
         visibility: hidden;
         transform: scale(0.8);
+      }
+      &.is-extended {
+        .event-list__item-img {
+          height: 100%;
+          padding-bottom: 0;
+          background-position-x: 0px;
+        }
+        .event-list__item-content {
+          display: none;
+        }
+      }
+      @include mq-phone_lg {
+        height: 260px;
       }
     }
 
@@ -66,10 +100,15 @@
         $themeName: nth($theme, 1);
         $themeStyles: nth($theme, 2);
         $themeColorPrimary: map-get($themeStyles, 'primary');
-    
+
         .is-#{$themeName}-theme & {
           background-color: $themeColorPrimary;
         }
+      }
+
+      @include mq-phone_lg {
+        height: 100%;
+        padding-bottom: 0;
       }
     }
 
@@ -86,6 +125,14 @@
       flex: 1 1 auto;
       flex-direction: column;
       padding: 4px 18px 13px;
+
+      @include mq-phone_lg {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background-color: $light;
+        width: 100%;
+      }
     }
 
     &-title {

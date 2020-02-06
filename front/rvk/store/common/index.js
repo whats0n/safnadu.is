@@ -2,7 +2,7 @@ import {
   STATES,
   MUTATIONS,
   DEFAULT_VIEW,
-  DEFAULT_THEME,
+  // DEFAULT_THEME,
   eventTypes,
   eventPlaces,
   eventAccesses
@@ -19,7 +19,7 @@ export const mutations = {
 export const state = () => ({
   [STATES.LOADING]: false,
 
-  [STATES.THEME]: DEFAULT_THEME,
+  [STATES.THEME]: null,
   [STATES.VIEW]: DEFAULT_VIEW,
 
   [STATES.COUNT]: null,
@@ -35,8 +35,9 @@ export const state = () => ({
   [STATES.SEARCH]: '',
   // end filters
 
+  [STATES.EVENT_DETAILS]: null,
   [STATES.EVENTS]: [],
   [STATES.EVENT_LIST_SCROLL_POSITION]: 0,
-  [STATES.EVENTS_LIMIT]: 150,
+  [STATES.EVENTS_LIMIT]: 50,
   [STATES.EVENTS_OFFSET]: 0
 })

@@ -3,37 +3,30 @@
 
   &__btn {
     position: relative;
-    padding: 5px 12px;
+    padding: 5px 24px;
+    border: 2px solid;
     max-width: 100%;
     color: $light;
     font-size: pxToRem(20);
     line-height: (24/20);
     text-align: left;
     cursor: pointer;
-    transition: color $themeTransitionDuration, background-color $themeTransitionDuration;
+    transition: border-color $themeTransitionDuration, color $themeTransitionDuration, background-color $themeTransitionDuration;
   
     .tag.is-selected & {
-      // padding-left: 24px;
+      padding-left: 12px;
       padding-right: 36px;
   
-      // &:before {
-      //   content: '';
-      //   position: absolute;
-      //   top: 16px;
-      //   left: 5px;
-      //   width: 10px;
-      //   height: 2px;
-      //   background: currentColor;
-      // }
-      // &:after {
-      //   content: '';
-      //   position: absolute;
-      //   top: 12px;
-      //   left: 9px;
-      //   width: 2px;
-      //   height: 10px;
-      //   background: currentColor;
-      // }
+      @each $theme in $themes {
+        $themeName: nth($theme, 1);
+        $themeStyles: nth($theme, 2);
+        $themeColorPrimary: map-get($themeStyles, 'primary');
+    
+        .is-#{$themeName}-theme & {
+          color: $light;
+          background: $themeColorPrimary;
+        }
+      }
     }
   
     @each $theme in $themes {
@@ -42,7 +35,9 @@
       $themeColorPrimary: map-get($themeStyles, 'primary');
   
       .is-#{$themeName}-theme & {
-        background: $themeColorPrimary;
+        border-color: $themeColorPrimary;
+        color: $themeColorPrimary;
+        background: none;
       }
     }
   }
