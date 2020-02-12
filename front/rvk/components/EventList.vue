@@ -11,7 +11,7 @@
     <div class="container event-list__container">
       <div class="content">
         <div class="event-list__inner">
-          <a
+          <!-- <a
             href="https://safnanott.safnadu.is/"
             target="_blank"
             class="event-list__intro"
@@ -21,7 +21,7 @@
               alt=""
               class="event-list__intro-img"
             />
-          </a>
+          </a> -->
           <div
             v-if="isLoading && !disableLoader"
             class="title-md event-list__loader"
