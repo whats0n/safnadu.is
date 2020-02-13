@@ -80,11 +80,28 @@
   }
 
   &__title {
-    flex: 0 0 auto;
     cursor: pointer;
 
+    &-wrapper {
+      flex: 0 0 auto;
+
+      @include mq-phone_md {
+        margin-left: 0px;
+      }
+    }
+  }
+
+  &__sub-info {
+    margin-top: pxToRem(-24);
+    margin-left: pxToRem(30);
+    font-size: pxToRem(20);
+    font-weight: 600;
+    line-height: (24/20);
+    letter-spacing: pxToRem(-0.06);
+
     @include mq-phone_md {
-      margin-left: 0px;
+      margin-top: 0;
+      margin-left: 0;
     }
   }
 

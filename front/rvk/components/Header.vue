@@ -15,9 +15,14 @@
       }"
     >
       <div class="container header__container">
-        <span class="title-xl header__title" @click="closePopupOrScrollTop">
-          Safnaðu
-        </span>
+        <div class="header__title-wrapper">
+          <span class="title-xl header__title" @click="closePopupOrScrollTop">
+            Safnaðu
+          </span>
+          <div v-if="!!randomLine" class="header__sub-info">
+            - {{ randomLine }}
+          </div>
+        </div>
         <ul class="header__tabs">
           <!-- <li class="header__tabs-item">
             <a
@@ -101,7 +106,8 @@ export default {
   computed: {
     ...mapGetters({
       tabs: `${MODULES.COMMON}/${GETTERS.VIEWS}`,
-      words: `${MODULES.COMMON}/${GETTERS.EVENT_TYPES}`
+      words: `${MODULES.COMMON}/${GETTERS.EVENT_TYPES}`,
+      randomLine: `${MODULES.COMMON}/${GETTERS.RANDOM_LINE}`
     }),
     classes() {
       return this.type && `header_${this.type}`
