@@ -17,6 +17,16 @@ import createEventPageLink from '~/helpers/createEventPageLink'
 export default {
   [GETTERS.LOADING]: state => state[STATES.LOADING],
 
+  [GETTERS.RANDOM_LINE]: state => {
+    const random = state[STATES.RANDOM]
+    const counter = state[STATES.COUNTER]
+    const index = Math.floor(
+      Math.random() * Math.floor(random.items.length - 1)
+    )
+    const text = counter >= 6 ? random.main : random.items[index]
+    return counter ? text : null
+  },
+
   [GETTERS.THEME]: state => `is-${THEMES[state[STATES.THEME]]}-theme`,
   [GETTERS.VIEWS]: state =>
     VIEWS.map(view => ({

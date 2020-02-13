@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
-import { GETTERS, MODULES, ACTIONS } from '~/helpers/constants'
+import { GETTERS, MODULES, ACTIONS, MUTATIONS } from '~/helpers/constants'
 import processClient from '~/helpers/processClient'
 import getScrollPosition from '~/helpers/getScrollPosition'
 import scrollTo from '~/helpers/scrollTo'
@@ -74,13 +74,24 @@ export default {
   created() {
     this.requestEvents()
     this.checkTouch()
-    processClient(() => this.setRandomTheme())
+    processClient(() => {
+      this.setRandomTheme()
+      let counter = localStorage.getItem('__refreshCounter')
+      counter = isFinite(+counter) ? +counter : 1
+      const isMain = counter >= 6
+      counter = isMain ? 1 : counter + 1
+      localStorage.setItem('__refreshCounter', counter)
+      this.setCounter(counter)
+    })
   },
   methods: {
     ...mapActions({
       requestEvents: `${MODULES.COMMON}/${ACTIONS.REQUEST_EVENTS}`,
       setEventListScrollPosition: `${MODULES.COMMON}/${ACTIONS.SET_EVENT_LIST_SCROLL_POSITION}`,
       setRandomTheme: `${MODULES.COMMON}/${ACTIONS.SET_RANDOM_THEME}`
+    }),
+    ...mapMutations({
+      setCounter: `${MODULES.COMMON}/${MUTATIONS.SET_COUNTER}`
     }),
     showWelcome() {
       if (!this.isAnimated) {
