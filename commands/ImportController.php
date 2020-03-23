@@ -89,6 +89,7 @@ class ImportController extends Controller
             if (!$event) {
                 $event = New Events();
                 $event->setAttributes($d);
+                $event->owner = (string)$event->owner;
                 $event->lat = $d['location'][0];
                 $event->lon = $d['location'][1];
                 $event->image_id = $d['image']['image_id'];
