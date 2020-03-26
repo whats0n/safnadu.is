@@ -19,7 +19,7 @@
           <span class="title-xl header__title" @click="closePopupOrScrollTop">
             Safnaðu
           </span>
-          <div class="header__sub-info">- {{ randomLine }}</div>
+          <div class="header__sub-info">- heima</div>
         </div>
         <ul class="header__tabs">
           <!-- <li class="header__tabs-item">

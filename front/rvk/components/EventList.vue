@@ -11,6 +11,16 @@
     <div class="container event-list__container">
       <div class="content">
         <div class="event-list__inner">
+          <div class="event-list__box">
+            <p>
+              Á meðan á samkomubanni stendur eru söfn borgarinnar, leikhús og
+              aðrir viðburðastaðir lokaðir.
+            </p>
+            <p>
+              Við hvetjum ykkur til að njóta fjölbreyttra viðburða sem streymt
+              er á netinu og safna góðum minningum heima.
+            </p>
+          </div>
           <!-- <a
             href="https://safnanott.safnadu.is/"
             target="_blank"

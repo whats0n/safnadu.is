@@ -119,7 +119,8 @@ export const eventTypes = [
   { id: 15, text: 'fjölskyldan', value: 'fjölskyld' },
   { id: 16, text: 'ljósmyndir', value: 'ljósmynd' },
   { id: 17, text: 'gagnvirkt', value: 'landnáms' },
-  { id: 18, text: 'myndlist', value: 'sýning' }
+  { id: 18, text: 'myndlist', value: 'sýning' },
+  { id: 19, text: 'kvílist', value: 'kvílist' }
 ]
 
 export const eventPlaces = [
